@@ -1,0 +1,48 @@
+﻿//Geraldine’s Landscaping Service and Gerard’s Landscaping Service are //merging their businesses and want to merge their customer files. Each file //contains a customer number, last name, address, and property area in square //feet, and each file is in customer number order. Design the logic for a program //that merges the two files into one file containing all customers in customer //number order. Assume there are no identical customer numbers.
+
+//Housekeeping
+//We are assuming that we can do basic things without modules such as read and write files
+//names for files we need
+gerardsFile =  OPEN ‘gerards.txt’ FOR READ
+geraldinesFile = OPEN ‘geraldines.txt’ FOR read
+
+//name for output file
+mergedFile = OPEN ‘AddedTogether.txt’ FOR WRITE
+
+//Prime reads. (while not end of file)
+READ gerardsFile INTO gerardsRecord
+READ geraldinesFile INTO geraldinesRecord
+//Main merge loop
+WHILE gerardsRecord <> EOF AND geraldinesRecord <> EOF DO
+
+	gerardsId = TO_INTEGER(SPLIT(gerardsRecord, ',')[0])
+
+	geraldinesId = TO_INTEGER(SPLIT(geraldinesRecord, ',')[0])
+	
+	IF gerardsId < geraldinesId then
+		WRITE gerardsRecord TO mergedFile
+		READ gerardsFile INTO gerardsRecord
+	ELSE
+		WRITE geraldinesRecord TO mergedFile
+		READ geraldinesFile INTO geraldinesRecord
+	ENDIF
+ENDWHILE
+//Finish any remaining records in gerardsFile
+WHILE gerardsRecord <> EOF DO
+	WRITE gerardsRecord TO mergedFile
+	READ gerardsFile INTO gerardsRecord
+ENDWHILE
+
+//Finish any remaining records in geraldines File
+WHILE geraldinesRecord <> EOF DO
+	WRITE geraldinesRecord TO mergedFile
+	READ geraldinesFile INTO geraldinesRecord
+ENDWHILE
+
+//Close files
+CLOSE gerardsFile
+CLOSE geraldinesFile
+CLOSE mergedFile
+
+//End of Job
+output 'File saved, program complete.'
